@@ -18,6 +18,7 @@ namespace Il2CppInterop.Runtime.Injection.Hooks
 
         private Il2CppClass* Hook(Il2CppImage* image, IntPtr _namespace, IntPtr name)
         {
+            HookStats.FromName++;
             Il2CppClass* classPtr = Original(image, _namespace, name);
 
             if (classPtr == null)

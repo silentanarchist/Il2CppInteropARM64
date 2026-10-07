@@ -146,9 +146,21 @@ internal unsafe class Il2CppDetourMethodPatcher : MethodPatcher
         var unmanagedDelegate = unmanagedTrampolineMethod.CreateDelegate(unmanagedDelegateType);
         DelegateCache.Add(unmanagedDelegate);
 
+        // Warpforge Revival change: note what follows the first instruction, to tell afterwards
+        // whether the hook stayed within 4 bytes (short methods on ARM64 need that).
+        ulong before1 = 0; uint before2 = 0;
+        bool watch = RuntimeInformation.ProcessArchitecture == Architecture.Arm64;
+        if (watch)
+        {
+            before1 = *(ulong*)(originalNativeMethodInfo.MethodPointer + 4);
+            before2 = *(uint*)(originalNativeMethodInfo.MethodPointer + 12);
+        }
         nativeDetour =
             Il2CppInteropRuntime.Instance.DetourProvider.Create(originalNativeMethodInfo.MethodPointer, unmanagedDelegate);
         nativeDetour.Apply();
+        if (watch && (before1 != *(ulong*)(originalNativeMethodInfo.MethodPointer + 4) || before2 != *(uint*)(originalNativeMethodInfo.MethodPointer + 12)))
+            Logger.Instance.LogWarning("Hook on {Method} needed 16 bytes; if that method is shorter, the one after it is damaged",
+                Original.DeclaringType?.Name + "." + Original.Name);
         modifiedNativeMethodInfo.MethodPointer = nativeDetour.OriginalTrampoline;
 
         var detour = new Detour(Original, managedHookedMethod);
@@ -279,7 +291,7 @@ internal unsafe class Il2CppDetourMethodPatcher : MethodPatcher
 
         if (!Original.IsStatic)
         {
-            EmitConvertArgumentToManaged(il, paramStartIndex - 1, Original.DeclaringType, out _);
+            EmitConvertArgumentToManaged(il, paramStartIndex - 1, Original.DeclaringType, out _, true);
         }
 
         for (var i = 0; i < managedParams.Length; ++i)
@@ -372,7 +384,8 @@ internal unsafe class Il2CppDetourMethodPatcher : MethodPatcher
     private static void EmitConvertArgumentToManaged(ILGenerator il,
         int argIndex,
         Type managedParamType,
-        out LocalBuilder variable)
+        out LocalBuilder variable,
+        bool isThis = false)
     {
         variable = null;
 
@@ -429,6 +442,14 @@ internal unsafe class Il2CppDetourMethodPatcher : MethodPatcher
 
         void EmitCreateIl2CppObject(Type originalType)
         {
+            if (isThis)
+            {
+                // Warpforge Revival change: even a zero 'this' goes through the check (see ArgumentGuard)
+                il.Emit(OpCodes.Ldc_I4, 1);
+                il.Emit(OpCodes.Call, AccessTools.Method(typeof(ArgumentGuard), nameof(ArgumentGuard.Get)).MakeGenericMethod(originalType));
+                return;
+            }
+
             var endLabel = il.DefineLabel();
             var notNullLabel = il.DefineLabel();
 
@@ -440,7 +461,9 @@ internal unsafe class Il2CppDetourMethodPatcher : MethodPatcher
             il.Emit(OpCodes.Br_S, endLabel);
 
             il.MarkLabel(notNullLabel);
-            il.Emit(OpCodes.Call, AccessTools.Method(typeof(Il2CppObjectPool), nameof(Il2CppObjectPool.Get)).MakeGenericMethod(originalType));
+            // Warpforge Revival change: checked conversion, see ArgumentGuard
+            il.Emit(OpCodes.Ldc_I4, isThis ? 1 : 0);
+            il.Emit(OpCodes.Call, AccessTools.Method(typeof(ArgumentGuard), nameof(ArgumentGuard.Get)).MakeGenericMethod(originalType));
 
             il.MarkLabel(endLabel);
         }
@@ -449,7 +472,7 @@ internal unsafe class Il2CppDetourMethodPatcher : MethodPatcher
         {
             if (originalType == typeof(string))
             {
-                il.Emit(OpCodes.Call, IL2CPPToManagedStringMethodInfo);
+                il.Emit(OpCodes.Call, AccessTools.Method(typeof(ArgumentGuard), nameof(ArgumentGuard.GetString)));
             }
             else if (originalType.IsSubclassOf(typeof(Il2CppObjectBase)))
             {

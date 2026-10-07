@@ -59,9 +59,9 @@ public class RegisterTypeOptions
 {
     public static readonly RegisterTypeOptions Default = new();
 
-    public bool LogSuccess { get; init; } = true;
-    public Func<Type, Type[]>? InterfacesResolver { get; init; } = null;
-    public Il2CppInterfaceCollection? Interfaces { get; init; } = null;
+    public bool LogSuccess { get; set; } = true;
+    public Func<Type, Type[]>? InterfacesResolver { get; set; } = null;
+    public Il2CppInterfaceCollection? Interfaces { get; set; } = null;
 }
 
 public static unsafe partial class ClassInjector

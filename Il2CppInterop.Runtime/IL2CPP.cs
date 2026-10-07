@@ -512,13 +512,17 @@ public static unsafe class IL2CPP
     public static extern IntPtr il2cpp_class_get_method_from_name(IntPtr klass,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int argsCount);
 
-    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.LPUTF8Str)]
-    public static extern string il2cpp_class_get_name(IntPtr klass);
+    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "il2cpp_class_get_name")]
+    private static extern IntPtr il2cpp_class_get_name_ptr(IntPtr klass);
 
-    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.LPUTF8Str)]
-    public static extern string il2cpp_class_get_namespace(IntPtr klass);
+    // Warpforge Revival change: the text belongs to the game, so it must be read, not freed.
+    public static string il2cpp_class_get_name(IntPtr klass) => Marshal.PtrToStringUTF8(il2cpp_class_get_name_ptr(klass));
+
+    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "il2cpp_class_get_namespace")]
+    private static extern IntPtr il2cpp_class_get_namespace_ptr(IntPtr klass);
+
+    // Warpforge Revival change: the text belongs to the game, so it must be read, not freed.
+    public static string il2cpp_class_get_namespace(IntPtr klass) => Marshal.PtrToStringUTF8(il2cpp_class_get_namespace_ptr(klass));
 
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern IntPtr il2cpp_class_get_parent(IntPtr klass);
@@ -581,9 +585,11 @@ public static unsafe class IL2CPP
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern IntPtr il2cpp_class_get_image(IntPtr klass);
 
-    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.LPUTF8Str)]
-    public static extern string il2cpp_class_get_assemblyname(IntPtr klass);
+    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "il2cpp_class_get_assemblyname")]
+    private static extern IntPtr il2cpp_class_get_assemblyname_ptr(IntPtr klass);
+
+    // Warpforge Revival change: the text belongs to the game, so it must be read, not freed.
+    public static string il2cpp_class_get_assemblyname(IntPtr klass) => Marshal.PtrToStringUTF8(il2cpp_class_get_assemblyname_ptr(klass));
 
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern int il2cpp_class_get_rank(IntPtr klass);
@@ -628,9 +634,11 @@ public static unsafe class IL2CPP
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern int il2cpp_field_get_flags(IntPtr field);
 
-    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.LPUTF8Str)]
-    public static extern string il2cpp_field_get_name(IntPtr field);
+    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "il2cpp_field_get_name")]
+    private static extern IntPtr il2cpp_field_get_name_ptr(IntPtr field);
+
+    // Warpforge Revival change: the text belongs to the game, so it must be read, not freed.
+    public static string il2cpp_field_get_name(IntPtr field) => Marshal.PtrToStringUTF8(il2cpp_field_get_name_ptr(field));
 
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern IntPtr il2cpp_field_get_parent(IntPtr field);
@@ -720,9 +728,11 @@ public static unsafe class IL2CPP
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern IntPtr il2cpp_method_get_declaring_type(IntPtr method);
 
-    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.LPUTF8Str)]
-    public static extern string il2cpp_method_get_name(IntPtr method);
+    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "il2cpp_method_get_name")]
+    private static extern IntPtr il2cpp_method_get_name_ptr(IntPtr method);
+
+    // Warpforge Revival change: the text belongs to the game, so it must be read, not freed.
+    public static string il2cpp_method_get_name(IntPtr method) => Marshal.PtrToStringUTF8(il2cpp_method_get_name_ptr(method));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IntPtr il2cpp_method_get_from_reflection(IntPtr method)
@@ -769,9 +779,11 @@ public static unsafe class IL2CPP
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern uint il2cpp_method_get_token(IntPtr method);
 
-    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.LPUTF8Str)]
-    public static extern string il2cpp_method_get_param_name(IntPtr method, uint index);
+    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "il2cpp_method_get_param_name")]
+    private static extern IntPtr il2cpp_method_get_param_name_ptr(IntPtr method, uint index);
+
+    // Warpforge Revival change: the text belongs to the game, so it must be read, not freed.
+    public static string il2cpp_method_get_param_name(IntPtr method, uint index) => Marshal.PtrToStringUTF8(il2cpp_method_get_param_name_ptr(method, index));
 
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern void il2cpp_profiler_install(IntPtr prof, IntPtr shutdown_callback);
@@ -802,9 +814,11 @@ public static unsafe class IL2CPP
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern IntPtr il2cpp_property_get_set_method(IntPtr prop);
 
-    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.LPUTF8Str)]
-    public static extern string il2cpp_property_get_name(IntPtr prop);
+    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "il2cpp_property_get_name")]
+    private static extern IntPtr il2cpp_property_get_name_ptr(IntPtr prop);
+
+    // Warpforge Revival change: the text belongs to the game, so it must be read, not freed.
+    public static string il2cpp_property_get_name(IntPtr prop) => Marshal.PtrToStringUTF8(il2cpp_property_get_name_ptr(prop));
 
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern IntPtr il2cpp_property_get_parent(IntPtr prop);
@@ -946,9 +960,11 @@ public static unsafe class IL2CPP
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern IntPtr il2cpp_type_get_class_or_element_class(IntPtr type);
 
-    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.LPUTF8Str)]
-    public static extern string il2cpp_type_get_name(IntPtr type);
+    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "il2cpp_type_get_name")]
+    private static extern IntPtr il2cpp_type_get_name_ptr(IntPtr type);
+
+    // Warpforge Revival change: the text belongs to the game, so it must be read, not freed.
+    public static string il2cpp_type_get_name(IntPtr type) => Marshal.PtrToStringUTF8(il2cpp_type_get_name_ptr(type));
 
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     [return: MarshalAs(UnmanagedType.I1)]
@@ -967,13 +983,17 @@ public static unsafe class IL2CPP
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern IntPtr il2cpp_image_get_assembly(IntPtr image);
 
-    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.LPUTF8Str)]
-    public static extern string il2cpp_image_get_name(IntPtr image);
+    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "il2cpp_image_get_name")]
+    private static extern IntPtr il2cpp_image_get_name_ptr(IntPtr image);
 
-    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.LPUTF8Str)]
-    public static extern string il2cpp_image_get_filename(IntPtr image);
+    // Warpforge Revival change: the text belongs to the game, so it must be read, not freed.
+    public static string il2cpp_image_get_name(IntPtr image) => Marshal.PtrToStringUTF8(il2cpp_image_get_name_ptr(image));
+
+    [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "il2cpp_image_get_filename")]
+    private static extern IntPtr il2cpp_image_get_filename_ptr(IntPtr image);
+
+    // Warpforge Revival change: the text belongs to the game, so it must be read, not freed.
+    public static string il2cpp_image_get_filename(IntPtr image) => Marshal.PtrToStringUTF8(il2cpp_image_get_filename_ptr(image));
 
     [DllImport("libil2cpp.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern IntPtr il2cpp_image_get_entry_point(IntPtr image);

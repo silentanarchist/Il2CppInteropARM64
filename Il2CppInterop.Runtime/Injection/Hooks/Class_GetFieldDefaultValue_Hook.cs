@@ -22,6 +22,7 @@ namespace Il2CppInterop.Runtime.Injection.Hooks
 
         private byte* Hook(Il2CppFieldInfo* field, out Il2CppTypeStruct* type)
         {
+            HookStats.GetFieldDefaultValue++;
             if (EnumInjector.GetDefaultValueOverride(field, out IntPtr newDefaultPtr))
             {
                 INativeFieldInfoStruct wrappedField = UnityVersionHandler.Wrap(field);

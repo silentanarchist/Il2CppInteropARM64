@@ -14,12 +14,14 @@ namespace Il2CppInterop.Runtime.Injection.Hooks
     {
         public override string TargetMethodName => "MetadataCache::GetTypeInfoFromTypeDefinitionIndex";
         public override MethodDelegate GetDetour() => Hook;
+        public override int FastPathKind => FastPath.NegativeNumber;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate Il2CppClass* MethodDelegate(int index);
 
         private Il2CppClass* Hook(int index)
         {
+            HookStats.GetTypeInfo++;
             if (InjectorHelpers.s_InjectedClasses.TryGetValue(index, out IntPtr classPtr))
                 return (Il2CppClass*)classPtr;
 

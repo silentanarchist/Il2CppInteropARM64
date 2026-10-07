@@ -19,6 +19,7 @@ namespace Il2CppInterop.Runtime.Injection.Hooks
 
         private Il2CppMethodInfo* Hook(Il2CppGenericMethod* gmethod, bool copyMethodPtr)
         {
+            HookStats.GetMethod++;
             if (ClassInjector.InflatedMethodFromContextDictionary.TryGetValue((IntPtr)gmethod->methodDefinition, out var methods))
             {
                 var instancePointer = gmethod->context.method_inst;
