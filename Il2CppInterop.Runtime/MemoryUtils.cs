@@ -6,8 +6,9 @@ namespace Il2CppInterop.Runtime;
 
 internal class MemoryUtils
 {
-    public static nint FindSignatureInModule(ProcessModule module, SignatureDefinition sigDef)
+    public static nint FindSignatureInModule(Il2CppInterop.Runtime.Injection.GameModule module, SignatureDefinition sigDef)
     {
+        if (module.BaseAddress == System.IntPtr.Zero) return 0;
         var ptr = FindSignatureInBlock(
             module.BaseAddress,
             module.ModuleMemorySize,

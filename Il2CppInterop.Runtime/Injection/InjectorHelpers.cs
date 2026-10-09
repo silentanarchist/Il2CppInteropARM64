@@ -27,9 +27,7 @@ namespace Il2CppInterop.Runtime.Injection
         internal static Assembly Il2CppMscorlib = typeof(Il2CppSystem.Type).Assembly;
         internal static INativeAssemblyStruct InjectedAssembly;
         internal static INativeImageStruct InjectedImage;
-        internal static ProcessModule Il2CppModule = Process.GetCurrentProcess()
-            .Modules.OfType<ProcessModule>()
-            .First((x) => x.ModuleName is "GameAssembly.dll" or "GameAssembly.so" or "UserAssembly.dll" or "libil2cpp.so");
+        internal static GameModule Il2CppModule = GameModule.Find();
 
         internal static IntPtr Il2CppHandle = NativeLibrary.Load("libil2cpp.so", typeof(InjectorHelpers).Assembly, null);
 
